@@ -1,8 +1,8 @@
-import { apiClient } from './client';
+import type { NavigateFunction } from 'react-router-dom';
+import apiClient from './client';
 
-// Interceptors configurations will be handled here
-export function setupInterceptors(logout: () => void) {
-    apiClient.interceptors.request.use((config) => {
+export function setupInterceptors(navigate: NavigateFunction) {
+    const requestInterceptor = apiClient.interceptors.request.use((config) => {
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -10,14 +10,19 @@ export function setupInterceptors(logout: () => void) {
         return config;
     });
 
-    apiClient.interceptors.response.use(
+    const responseInterceptor = apiClient.interceptors.response.use(
         (response) => response,
         (error) => {
             if (error.response?.status === 401) {
-                logout();
-                window.location.href = '/login';
+                localStorage.removeItem('token');
+                navigate('/login');
             }
             return Promise.reject(error);
         }
     );
+
+    return () => {
+        apiClient.interceptors.request.eject(requestInterceptor);
+        apiClient.interceptors.response.eject(responseInterceptor);
+    };
 }

@@ -1,14 +1,18 @@
 import { useEffect } from 'react';
-import { useAuth } from './contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { setupInterceptors } from './api/interceptors';
 import { AppRoutes } from './routes';
 
 function App() {
-  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setupInterceptors(logout);
-  }, [logout]);
+    const cleanupInterceptors = setupInterceptors(navigate);
+
+    return () => {
+      cleanupInterceptors();
+    };
+  }, [navigate]);
 
   return <AppRoutes />;
 }
