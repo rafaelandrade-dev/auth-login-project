@@ -6,3 +6,11 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
+
+export function getApiErrorMessage(error: unknown): string {
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+        const axiosError = error as { response: { data: { message?: string } } };
+        return axiosError.response?.data?.message || 'Ocorreu um erro inesperado na API.';
+    }
+    return (error as Error).message || 'Ocorreu um erro inesperado.';
+}
