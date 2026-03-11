@@ -5,6 +5,7 @@ import { Eye, Pencil, Trash2, UserPlus, AlertCircle } from 'lucide-react';
 
 import { Header } from '../components/layout/Header';
 import { Button } from '../components/ui/Button';
+import { UserDetailModal } from '../components/UserDetailModal';
 import { getUsers } from '../api/users.service';
 
 export default function HomePage() {
@@ -15,6 +16,9 @@ export default function HomePage() {
 
     const [page, setPage] = useState(initialPage);
     const [limit] = useState(initialLimit);
+
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
 
     useEffect(() => {
         setSearchParams({ page: page.toString(), limit: limit.toString() });
@@ -133,7 +137,15 @@ export default function HomePage() {
                                                     </td>
                                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                         <div className="flex justify-end gap-2">
-                                                            <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600" title="Ver detalhes">
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600"
+                                                                title="Ver detalhes"
+                                                                onClick={() => {
+                                                                    setSelectedUserId(user.id);
+                                                                    setIsDetailOpen(true);
+                                                                }}
+                                                            >
                                                                 <Eye className="h-4 w-4" />
                                                             </Button>
                                                             <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-blue-600" title="Editar">
@@ -222,6 +234,12 @@ export default function HomePage() {
                 </div>
 
             </main>
+
+            <UserDetailModal
+                userId={selectedUserId}
+                isOpen={isDetailOpen}
+                onClose={() => setIsDetailOpen(false)}
+            />
         </div>
     );
 }
