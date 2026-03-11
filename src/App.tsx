@@ -1,20 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setupInterceptors } from './api/interceptors';
 import { AppRoutes } from './routes';
 
-function App() {
+function InterceptorSetup({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const cleanupInterceptors = setupInterceptors(navigate);
-
-    return () => {
-      cleanupInterceptors();
-    };
+    const cleanup = setupInterceptors(navigate);
+    setIsReady(true);
+    return cleanup;
   }, [navigate]);
 
-  return <AppRoutes />;
+  if (!isReady) return null;
+
+  return <>{children}</>;
+}
+
+function App() {
+  return (
+    <InterceptorSetup>
+      <AppRoutes />
+    </InterceptorSetup>
+  );
 }
 
 export default App;
