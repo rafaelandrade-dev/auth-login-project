@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Eye, Pencil, Trash2, UserPlus, AlertCircle } from 'lucide-react';
 
 import { Header } from '../components/layout/Header';
 import { Button } from '../components/ui/Button';
 import { UserDetailModal } from '../components/UserDetailModal';
+import { UserCreateModal } from '../components/UserCreateModal';
+import { UserEditModal } from '../components/UserEditModal';
 import { getUsers } from '../api/users.service';
+import { useAuth } from '../contexts/AuthContext';
+import { cn } from '../lib/utils';
+import type { User } from '../types/user';
 
 export default function HomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const queryClient = useQueryClient();
 
     const initialPage = parseInt(searchParams.get('page') || '1', 10);
     const initialLimit = parseInt(searchParams.get('limit') || '10', 10);
@@ -17,8 +23,12 @@ export default function HomePage() {
     const [page, setPage] = useState(initialPage);
     const [limit] = useState(initialLimit);
 
+    const { user: authUser } = useAuth();
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     useEffect(() => {
         setSearchParams({ page: page.toString(), limit: limit.toString() });
@@ -52,7 +62,7 @@ export default function HomePage() {
                         </p>
                     </div>
                     <div className="mt-4 sm:mt-0">
-                        <Button className="flex items-center gap-2">
+                        <Button className="flex items-center gap-2" onClick={() => setIsCreateOpen(true)}>
                             <UserPlus className="h-4 w-4" />
                             Novo Usuário
                         </Button>
@@ -148,7 +158,19 @@ export default function HomePage() {
                                                             >
                                                                 <Eye className="h-4 w-4" />
                                                             </Button>
-                                                            <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-blue-600" title="Editar">
+                                                            <Button
+                                                                variant="ghost"
+                                                                className={cn(
+                                                                    "h-8 w-8 p-0",
+                                                                    user.id === authUser?.id ? "text-blue-600 hover:text-blue-700" : "text-gray-300 cursor-not-allowed opacity-50"
+                                                                )}
+                                                                title={user.id === authUser?.id ? "Editar" : "Apenas o próprio usuário pode se editar"}
+                                                                disabled={user.id !== authUser?.id}
+                                                                onClick={() => {
+                                                                    setSelectedUser(user);
+                                                                    setIsEditOpen(true);
+                                                                }}
+                                                            >
                                                                 <Pencil className="h-4 w-4" />
                                                             </Button>
                                                             <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-red-600" title="Deletar">
@@ -167,7 +189,7 @@ export default function HomePage() {
                                                             {page > 1 ? (
                                                                 <Button onClick={() => setPage(1)}>Voltar para página 1</Button>
                                                             ) : (
-                                                                <Button className="flex items-center gap-2">
+                                                                <Button className="flex items-center gap-2" onClick={() => setIsCreateOpen(true)}>
                                                                     <UserPlus className="h-4 w-4" />
                                                                     Criar usuário
                                                                 </Button>
@@ -239,6 +261,29 @@ export default function HomePage() {
                 userId={selectedUserId}
                 isOpen={isDetailOpen}
                 onClose={() => setIsDetailOpen(false)}
+            />
+
+            <UserCreateModal
+                isOpen={isCreateOpen}
+                onClose={() => setIsCreateOpen(false)}
+                onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ['users'] });
+                }}
+            />
+
+            <UserEditModal
+                user={selectedUser}
+                isOpen={isEditOpen}
+                onClose={() => {
+                    setIsEditOpen(false);
+                    setSelectedUser(null);
+                }}
+                onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ['users'] });
+                    if (selectedUser) {
+                        queryClient.invalidateQueries({ queryKey: ['user', selectedUser.id] });
+                    }
+                }}
             />
         </div>
     );
