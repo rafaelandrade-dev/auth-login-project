@@ -91,150 +91,146 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                {isError && (
-                    <div className="rounded-md bg-red-50 p-4 mb-6 border border-red-200">
-                        <div className="flex">
-                            <div className="flex-shrink-0">
-                                <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
-                            </div>
-                            <div className="ml-3">
-                                <h3 className="text-sm font-medium text-red-800">Erro ao carregar usuários</h3>
-                                <div className="mt-2 text-sm text-red-700">
-                                    <p>{error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.'}</p>
-                                </div>
-                                <div className="mt-4">
-                                    <Button variant="ghost" onClick={() => refetch()} className="text-red-800 hover:bg-red-100">
-                                        Tentar novamente
-                                    </Button>
+                {isError ? (
+                    <div className="rounded-lg bg-red-50 p-8 text-center border border-red-200">
+                        <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-4" />
+                        <h3 className="text-lg font-medium text-red-800 mb-2">Erro ao carregar usuários</h3>
+                        <p className="text-sm text-red-700 mb-6">
+                            {error instanceof Error ? error.message : 'Ocorreu um erro ao tentar buscar a lista de usuários.'}
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={() => refetch()}
+                            className="bg-red-600 hover:bg-red-700 border-none"
+                        >
+                            Tentar novamente
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="mt-8 flex flex-col">
+                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg bg-white">
+                                    <table className="min-w-full divide-y divide-gray-300">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                    ID
+                                                </th>
+                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    Nome
+                                                </th>
+                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    E-mail
+                                                </th>
+                                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                    <span className="sr-only">Ações</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200 bg-white">
+                                            {isLoading ? (
+                                                Array.from({ length: 5 }).map((_, idx) => (
+                                                    <tr key={`skeleton-${idx}`}>
+                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                                            <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
+                                                        </td>
+                                                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                                            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                                                        </td>
+                                                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                                            <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
+                                                        </td>
+                                                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                            <div className="flex justify-end gap-2 text-gray-200">
+                                                                <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                                                                <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                                                                <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : data?.data && data.data.length > 0 ? (
+                                                data.data.map((user) => (
+                                                    <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                            {user.id}
+                                                        </td>
+                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {user.name}
+                                                        </td>
+                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {user.email}
+                                                        </td>
+                                                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                            <div className="flex justify-end gap-1">
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50"
+                                                                    title="Ver detalhes"
+                                                                    onClick={() => {
+                                                                        setSelectedUserId(user.id);
+                                                                        setIsDetailOpen(true);
+                                                                    }}
+                                                                >
+                                                                    <Eye className="h-4 w-4" />
+                                                                </Button>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    className={cn(
+                                                                        "h-8 w-8 p-0",
+                                                                        user.id === authUser?.id
+                                                                            ? "text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                                            : "text-gray-300 cursor-not-allowed opacity-50"
+                                                                    )}
+                                                                    title={user.id === authUser?.id ? "Editar" : "Apenas o próprio usuário pode se editar"}
+                                                                    disabled={user.id !== authUser?.id}
+                                                                    onClick={() => {
+                                                                        setSelectedUser(user);
+                                                                        setIsEditOpen(true);
+                                                                    }}
+                                                                >
+                                                                    <Pencil className="h-4 w-4" />
+                                                                </Button>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    className="h-8 w-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                                                                    title="Deletar"
+                                                                    onClick={() => {
+                                                                        setUserToDelete(user);
+                                                                        setIsDeleteOpen(true);
+                                                                    }}
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={4} className="py-20 text-center">
+                                                        <div className="flex flex-col items-center justify-center">
+                                                            <div className="bg-gray-100 p-4 rounded-full mb-4">
+                                                                <Trash2 className="h-8 w-8 text-gray-400" />
+                                                            </div>
+                                                            <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum usuário cadastrado ainda.</h3>
+                                                            <p className="text-sm text-gray-500 mb-6">Comece criando o primeiro usuário do sistema.</p>
+                                                            <Button className="flex items-center gap-2" onClick={() => setIsCreateOpen(true)}>
+                                                                <UserPlus className="h-4 w-4" />
+                                                                Criar primeiro usuário
+                                                            </Button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 )}
-
-                <div className="mt-8 flex flex-col">
-                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg bg-white">
-                                <table className="min-w-full divide-y divide-gray-300">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                ID
-                                            </th>
-                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                Nome
-                                            </th>
-                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                E-mail
-                                            </th>
-                                            <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                <span className="sr-only">Ações</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200 bg-white">
-                                        {isLoading ? (
-                                            Array.from({ length: 5 }).map((_, idx) => (
-                                                <tr key={`skeleton-${idx}`}>
-                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                                        <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                                        <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                                        <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
-                                                    </td>
-                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                        <div className="flex justify-end gap-2">
-                                                            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-                                                            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-                                                            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : data?.data && data.data.length > 0 ? (
-                                            data.data.map((user) => (
-                                                <tr key={user.id}>
-                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        {user.id}
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {user.name}
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {user.email}
-                                                    </td>
-                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                        <div className="flex justify-end gap-2">
-                                                            <Button
-                                                                variant="ghost"
-                                                                className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600"
-                                                                title="Ver detalhes"
-                                                                onClick={() => {
-                                                                    setSelectedUserId(user.id);
-                                                                    setIsDetailOpen(true);
-                                                                }}
-                                                            >
-                                                                <Eye className="h-4 w-4" />
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                className={cn(
-                                                                    "h-8 w-8 p-0",
-                                                                    user.id === authUser?.id ? "text-blue-600 hover:text-blue-700" : "text-gray-300 cursor-not-allowed opacity-50"
-                                                                )}
-                                                                title={user.id === authUser?.id ? "Editar" : "Apenas o próprio usuário pode se editar"}
-                                                                disabled={user.id !== authUser?.id}
-                                                                onClick={() => {
-                                                                    setSelectedUser(user);
-                                                                    setIsEditOpen(true);
-                                                                }}
-                                                            >
-                                                                <Pencil className="h-4 w-4" />
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                className="h-8 w-8 p-0 text-gray-400 hover:text-red-600"
-                                                                title="Deletar"
-                                                                onClick={() => {
-                                                                    setUserToDelete(user);
-                                                                    setIsDeleteOpen(true);
-                                                                }}
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            !isError && (
-                                                <tr>
-                                                    <td colSpan={4} className="py-12 text-center">
-                                                        <div className="flex flex-col items-center justify-center">
-                                                            <p className="text-sm text-gray-500 mb-4">Nenhum usuário encontrado na página {page}</p>
-                                                            {page > 1 ? (
-                                                                <Button onClick={() => setPage(1)}>Voltar para página 1</Button>
-                                                            ) : (
-                                                                <Button className="flex items-center gap-2" onClick={() => setIsCreateOpen(true)}>
-                                                                    <UserPlus className="h-4 w-4" />
-                                                                    Criar usuário
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {/* Pagination */}
                 <div className="mt-6 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 shadow rounded-lg">

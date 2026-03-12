@@ -1,7 +1,8 @@
 import type { NavigateFunction } from 'react-router-dom';
+import { toast } from 'sonner';
 import apiClient from './client';
 
-export function setupInterceptors(navigate: NavigateFunction) {
+export function setupInterceptors(navigate: NavigateFunction, logout: () => void) {
     const requestInterceptor = apiClient.interceptors.request.use((config) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -14,7 +15,8 @@ export function setupInterceptors(navigate: NavigateFunction) {
         (response) => response,
         (error) => {
             if (error.response?.status === 401) {
-                localStorage.removeItem('token');
+                toast.error('Sessão expirada. Faça login novamente.');
+                logout();
                 navigate('/login');
             }
             return Promise.reject(error);
