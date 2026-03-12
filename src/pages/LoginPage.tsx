@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Mail, LockKeyhole, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Input } from '../components/ui/Input';
@@ -31,49 +31,50 @@ export default function LoginPage() {
         formState: { errors, isSubmitting },
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: '',
-            password: '',
-        },
+        defaultValues: { email: '', password: '' },
     });
 
     const onSubmit = async (data: LoginFormValues) => {
         try {
-            const payload: LoginPayload = {
-                email: data.email,
-                password: data.password,
-            };
-
+            const payload: LoginPayload = { email: data.email, password: data.password };
             const response = await loginUser(payload);
             login(response.token);
             navigate('/', { replace: true });
         } catch (error) {
-            const errorMessage = getApiErrorMessage(error);
-            toast.error(errorMessage);
+            toast.error(getApiErrorMessage(error));
         }
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
-                <div className="text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">Entrar na conta</h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        Ou{' '}
-                        <Link to="/cadastro" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                            faça seu cadastro
-                        </Link>
-                    </p>
-                </div>
+        <div className="min-h-screen bg-bg flex items-center justify-center px-4 py-12">
+            {/* Background glow */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
+            </div>
 
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="space-y-4">
+            <div className="relative w-full max-w-md">
+                {/* Card */}
+                <div className="rounded-2xl bg-surface border border-border-subtle shadow-card p-8">
+                    {/* Logo */}
+                    <div className="flex flex-col items-center mb-8">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-violet-600 shadow-glow-sm mb-4">
+                            <Shield className="h-6 w-6 text-white" />
+                        </div>
+                        <h1 className="text-2xl font-bold text-text-primary tracking-tight">Bem-vindo de volta</h1>
+                        <p className="text-sm text-text-muted mt-1">
+                            Entre na sua conta para continuar
+                        </p>
+                    </div>
+
+                    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                         <Input
                             label="E-mail"
                             type="email"
                             autoComplete="email"
                             placeholder="seu@email.com"
                             error={errors.email?.message}
+                            icon={<Mail className="h-4 w-4" />}
                             {...register('email')}
                         />
 
@@ -84,23 +85,34 @@ export default function LoginPage() {
                                 autoComplete="current-password"
                                 placeholder="••••••••"
                                 error={errors.password?.message}
+                                icon={<LockKeyhole className="h-4 w-4" />}
                                 {...register('password')}
                             />
                             <button
                                 type="button"
-                                className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
+                                className="absolute right-3 top-7 text-text-muted hover:text-text-primary transition-colors"
                                 onClick={() => setShowPassword(!showPassword)}
                                 tabIndex={-1}
                             >
-                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </button>
                         </div>
-                    </div>
 
-                    <Button type="submit" className="w-full" loading={isSubmitting}>
-                        Entrar
-                    </Button>
-                </form>
+                        <Button type="submit" size="lg" className="w-full mt-2" loading={isSubmitting}>
+                            Entrar
+                        </Button>
+                    </form>
+
+                    <p className="mt-6 text-center text-sm text-text-muted">
+                        Não tem uma conta?{' '}
+                        <Link
+                            to="/cadastro"
+                            className="font-medium text-primary-400 hover:text-primary-300 transition-colors"
+                        >
+                            Criar conta
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
