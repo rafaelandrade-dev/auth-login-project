@@ -8,14 +8,14 @@ import { toast } from 'sonner';
 
 import { Modal } from './ui/Modal';
 import { Input } from './ui/Input';
-import { Button } from './ui/Button';
+import { ModalFooter } from './ui/ModalFooter';
+import { UserFormFields } from './ui/UserFormFields';
 import { createUser } from '../api/users.service';
 import { getApiErrorMessage } from '../lib/utils';
+import { nameEmailSchema } from '../lib/userSchemas';
 import type { CreateUserPayload } from '../types/user';
 
-const userCreateSchema = z.object({
-    name: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
-    email: z.string().min(1, 'O e-mail é obrigatório').email('E-mail inválido'),
+const userCreateSchema = nameEmailSchema.extend({
     password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
@@ -37,11 +37,7 @@ export function UserCreateModal({ isOpen, onClose, onSuccess }: UserCreateModalP
         formState: { errors },
     } = useForm<UserCreateFormValues>({
         resolver: zodResolver(userCreateSchema),
-        defaultValues: {
-            name: '',
-            email: '',
-            password: '',
-        },
+        defaultValues: { name: '', email: '', password: '' },
     });
 
     const mutation = useMutation({
@@ -52,18 +48,12 @@ export function UserCreateModal({ isOpen, onClose, onSuccess }: UserCreateModalP
             onSuccess();
             onClose();
         },
-        onError: (error) => {
+        onError: (error: unknown) => {
             toast.error(getApiErrorMessage(error));
         },
     });
 
-    const onSubmit = (data: UserCreateFormValues) => {
-        mutation.mutate({
-            name: data.name,
-            email: data.email,
-            password: data.password,
-        });
-    };
+    const onSubmit = (data: UserCreateFormValues) => mutation.mutate(data);
 
     const handleClose = () => {
         reset();
@@ -73,23 +63,7 @@ export function UserCreateModal({ isOpen, onClose, onSuccess }: UserCreateModalP
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Criar Novo Usuário">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <Input
-                    label="Nome"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Nome completo"
-                    error={errors.name?.message}
-                    {...register('name')}
-                />
-
-                <Input
-                    label="E-mail"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="email@exemplo.com"
-                    error={errors.email?.message}
-                    {...register('email')}
-                />
+                <UserFormFields register={register as never} errors={errors} />
 
                 <div className="relative">
                     <Input
@@ -110,14 +84,12 @@ export function UserCreateModal({ isOpen, onClose, onSuccess }: UserCreateModalP
                     </button>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
-                    <Button type="button" variant="ghost" onClick={handleClose} disabled={mutation.isPending}>
-                        Cancelar
-                    </Button>
-                    <Button type="submit" loading={mutation.isPending}>
-                        Criar
-                    </Button>
-                </div>
+                <ModalFooter
+                    onClose={handleClose}
+                    isLoading={mutation.isPending}
+                    submitLabel="Criar"
+                    formAction
+                />
             </form>
         </Modal>
     );
