@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Eye, Pencil, Trash2, UserPlus, AlertCircle } from 'lucide-react';
 
 import { Header } from '../components/layout/Header';
@@ -8,9 +8,11 @@ import { Button } from '../components/ui/Button';
 import { UserDetailModal } from '../components/UserDetailModal';
 import { UserCreateModal } from '../components/UserCreateModal';
 import { UserEditModal } from '../components/UserEditModal';
-import { getUsers } from '../api/users.service';
+import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
+import { getUsers, deleteUser } from '../api/users.service';
 import { useAuth } from '../contexts/AuthContext';
-import { cn } from '../lib/utils';
+import { cn, getApiErrorMessage } from '../lib/utils';
+import { toast } from 'sonner';
 import type { User } from '../types/user';
 
 export default function HomePage() {
@@ -26,9 +28,11 @@ export default function HomePage() {
     const { user: authUser } = useAuth();
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
     useEffect(() => {
         setSearchParams({ page: page.toString(), limit: limit.toString() });
@@ -37,6 +41,24 @@ export default function HomePage() {
     const { data, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['users', page, limit],
         queryFn: () => getUsers(page, limit),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: number) => deleteUser(id),
+        onSuccess: () => {
+            toast.success('Usuário excluído com sucesso!');
+            setIsDeleteOpen(false);
+            setUserToDelete(null);
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+
+            // Lógica de paginação: se deletar o último item de uma página (que não seja a 1), volta uma página
+            if (data?.data.length === 1 && page > 1) {
+                setPage(page - 1);
+            }
+        },
+        onError: (error: unknown) => {
+            toast.error(getApiErrorMessage(error));
+        },
     });
 
     const totalPages = data ? Math.ceil(data.total / limit) : 0;
@@ -173,7 +195,15 @@ export default function HomePage() {
                                                             >
                                                                 <Pencil className="h-4 w-4" />
                                                             </Button>
-                                                            <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-red-600" title="Deletar">
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="h-8 w-8 p-0 text-gray-400 hover:text-red-600"
+                                                                title="Deletar"
+                                                                onClick={() => {
+                                                                    setUserToDelete(user);
+                                                                    setIsDeleteOpen(true);
+                                                                }}
+                                                            >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>
                                                         </div>
@@ -282,6 +312,21 @@ export default function HomePage() {
                     queryClient.invalidateQueries({ queryKey: ['users'] });
                     if (selectedUser) {
                         queryClient.invalidateQueries({ queryKey: ['user', selectedUser.id] });
+                    }
+                }}
+            />
+
+            <ConfirmDeleteModal
+                isOpen={isDeleteOpen}
+                userName={userToDelete?.name || ''}
+                isLoading={deleteMutation.isPending}
+                onClose={() => {
+                    setIsDeleteOpen(false);
+                    setUserToDelete(null);
+                }}
+                onConfirm={() => {
+                    if (userToDelete) {
+                        deleteMutation.mutate(userToDelete.id);
                     }
                 }}
             />
