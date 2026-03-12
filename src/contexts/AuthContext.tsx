@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { DecodedToken } from '../types/auth';
 
 interface AuthContextType {
@@ -36,17 +36,21 @@ function isTokenValid(token: string): boolean {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<DecodedToken | null>(null);
-
-    useEffect(() => {
-        const savedToken = localStorage.getItem('token');
-        if (savedToken && isTokenValid(savedToken)) {
-            login(savedToken);
-        } else {
-            logout();
+    const [token, setToken] = useState<string | null>(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken && isTokenValid(storedToken)) {
+            return storedToken;
         }
-    }, []);
+        localStorage.removeItem('token');
+        return null;
+    });
+    const [user, setUser] = useState<DecodedToken | null>(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken && isTokenValid(storedToken)) {
+            return decodeJWT(storedToken);
+        }
+        return null;
+    });
 
     const login = (newToken: string) => {
         const decoded = decodeJWT(newToken);
