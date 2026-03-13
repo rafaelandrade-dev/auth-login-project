@@ -36,7 +36,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
             {isLoading ? (
                 <div className="space-y-5 py-2 animate-pulse">
                     {/* Avatar + name skeleton */}
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-[#252842]">
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-surface-hover">
                         <div className="h-14 w-14 rounded-full bg-surface-hover flex-shrink-0" />
                         <div className="space-y-2 flex-1">
                             <div className="h-5 w-40 rounded bg-surface-hover" />
@@ -46,7 +46,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
                     {/* Details skeleton */}
                     <div className="space-y-3">
                         {[1, 2, 3].map((i) => (
-                            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#252842]">
+                            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-surface-hover">
                                 <div className="h-4 w-4 rounded bg-surface-hover" />
                                 <div className="h-4 w-24 rounded bg-surface-hover" />
                                 <div className="h-4 w-36 rounded bg-surface-hover ml-auto" />
@@ -72,7 +72,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
             ) : data ? (
                 <div className="space-y-5 py-2">
                     {/* User profile header */}
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-[#252842] border border-border-subtle">
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-surface-hover border border-border-subtle">
                         <div className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${avatarColor} text-white font-bold text-xl shadow-sm flex-shrink-0`}>
                             {getInitials(data.name)}
                         </div>
@@ -88,7 +88,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
                     {/* Details list */}
                     <dl className="space-y-2">
                         {/* ID */}
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-hover border border-border-subtle">
                             <Hash className="h-4 w-4 text-primary-400 flex-shrink-0" />
                             <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
                                 ID
@@ -99,7 +99,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
                         </div>
 
                         {/* Name */}
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-hover border border-border-subtle">
                             <UserIcon className="h-4 w-4 text-primary-400 flex-shrink-0" />
                             <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
                                 Nome
@@ -110,7 +110,7 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
                         </div>
 
                         {/* Email */}
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-hover border border-border-subtle">
                             <Mail className="h-4 w-4 text-primary-400 flex-shrink-0" />
                             <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
                                 E-mail

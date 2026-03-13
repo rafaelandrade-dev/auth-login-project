@@ -3,7 +3,7 @@ import { Input } from './Input';
 import type { NameEmailFormValues } from '../../lib/userSchemas';
 
 interface UserFormFieldsProps {
-    register: UseFormRegister<any>;
+    register: UseFormRegister<NameEmailFormValues>;
     errors: FieldErrors<NameEmailFormValues>;
 }
 

@@ -157,7 +157,7 @@ export default function HomePage() {
                             <table className="min-w-full">
                                 {/* Table Head */}
                                 <thead>
-                                    <tr className="bg-[#252842] border-b border-border-subtle">
+                                    <tr className="bg-surface-hover border-b border-border-subtle">
                                         <th scope="col" className="py-3.5 pl-5 pr-3 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted w-16">
                                             ID
                                         </th>

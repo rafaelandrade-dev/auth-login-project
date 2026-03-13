@@ -58,7 +58,7 @@ export function Header() {
                             {/* Dropdown */}
                             {isDropdownOpen && (
                                 <div
-                                    className="absolute right-0 mt-2 w-60 rounded-xl bg-[#1A1D2E] border border-border-subtle shadow-card overflow-hidden z-50 animate-[fadeSlideDown_150ms_ease-out]"
+                                    className="absolute right-0 mt-2 w-60 rounded-xl bg-surface border border-border-subtle shadow-card overflow-hidden z-50 animate-[fadeSlideDown_150ms_ease-out]"
                                     style={{ transformOrigin: 'top right' }}
                                 >
                                     {/* User info header */}

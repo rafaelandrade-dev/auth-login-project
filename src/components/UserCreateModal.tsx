@@ -63,7 +63,7 @@ export function UserCreateModal({ isOpen, onClose, onSuccess }: UserCreateModalP
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Criar Novo Usuário">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <UserFormFields register={register as never} errors={errors} />
+                <UserFormFields register={register as any} errors={errors} />
 
                 <Input
                     label="Senha"
