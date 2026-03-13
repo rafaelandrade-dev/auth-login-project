@@ -40,6 +40,15 @@ export default {
       backgroundImage: {
         'gradient-primary': 'linear-gradient(135deg, #4F46E5, #7C3AED)',
       },
+      keyframes: {
+        fadeSlideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-8px) scale(0.97)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+      },
+      animation: {
+        fadeSlideDown: 'fadeSlideDown 150ms ease-out forwards',
+      },
     },
   },
   plugins: [],

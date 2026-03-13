@@ -73,21 +73,6 @@ export default function RegisterPage() {
                         </p>
                     </div>
                 </div>
-
-                <div className="relative z-10 mt-auto">
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                        <p className="text-sm font-medium text-primary-100 mb-4 italic">
-                            "O UserHub transformou a maneira como gerenciamos nossos acessos internos. Simples, rápido e extremamente seguro."
-                        </p>
-                        <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-primary-400/30 border border-white/20" />
-                            <div>
-                                <p className="text-xs font-bold text-white">Rafael Andrade</p>
-                                <p className="text-[10px] text-primary-100/60">CTO @ TechFlow</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Right Column: Form Panel */}

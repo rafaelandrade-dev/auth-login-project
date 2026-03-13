@@ -57,14 +57,24 @@ export function Header() {
 
                             {/* Dropdown */}
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#1A1D2E] border border-border-subtle shadow-card overflow-hidden z-50">
+                                <div
+                                    className="absolute right-0 mt-2 w-60 rounded-xl bg-[#1A1D2E] border border-border-subtle shadow-card overflow-hidden z-50 animate-[fadeSlideDown_150ms_ease-out]"
+                                    style={{ transformOrigin: 'top right' }}
+                                >
                                     {/* User info header */}
-                                    <div className="px-4 py-3 border-b border-border-subtle">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-0.5">Logado como</p>
-                                        <p className="text-xs text-text-primary truncate">{user.email}</p>
+                                    <div className="px-4 py-3.5 border-b border-border-subtle">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-violet-600 text-white text-xs font-bold shadow-sm flex-shrink-0">
+                                                {user.email?.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-0.5">Logado como</p>
+                                                <p className="text-xs text-text-primary truncate">{user.email}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     {/* Actions */}
-                                    <div className="py-1">
+                                    <div className="py-1.5">
                                         <button
                                             onClick={() => {
                                                 setIsPasswordModalOpen(true);
@@ -72,7 +82,7 @@ export function Header() {
                                             }}
                                             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors"
                                         >
-                                            <Lock className="h-3.5 w-3.5 flex-shrink-0" />
+                                            <Lock className="h-3.5 w-3.5 flex-shrink-0 text-primary-400" />
                                             Alterar senha
                                         </button>
                                         <button

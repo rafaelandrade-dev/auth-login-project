@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AlertCircle, User as UserIcon, Mail, Hash } from 'lucide-react';
+import { AlertCircle, User as UserIcon, Mail, Hash, CheckCircle2 } from 'lucide-react';
 import { Modal } from './ui/Modal';
 import { Button } from './ui/Button';
 import { getUserById } from '../api/users.service';
@@ -10,6 +10,18 @@ interface UserDetailModalProps {
     onClose: () => void;
 }
 
+function getInitials(name: string): string {
+    return name.split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase();
+}
+
+const AVATAR_COLORS = [
+    'from-blue-500 to-indigo-600',
+    'from-violet-500 to-purple-600',
+    'from-pink-500 to-rose-600',
+    'from-teal-500 to-emerald-600',
+    'from-orange-500 to-amber-600',
+];
+
 export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProps) {
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['user', userId],
@@ -17,93 +29,106 @@ export function UserDetailModal({ userId, isOpen, onClose }: UserDetailModalProp
         enabled: isOpen && userId !== null,
     });
 
+    const avatarColor = data ? AVATAR_COLORS[data.name.charCodeAt(0) % AVATAR_COLORS.length] : AVATAR_COLORS[0];
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Detalhes do Usuário">
             {isLoading ? (
-                <div className="space-y-4 py-4">
-                    <div className="flex items-center space-x-4">
-                        <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse"></div>
-                        <div className="space-y-2">
-                            <div className="h-5 w-48 bg-gray-200 rounded animate-pulse"></div>
-                            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="space-y-5 py-2 animate-pulse">
+                    {/* Avatar + name skeleton */}
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-[#252842]">
+                        <div className="h-14 w-14 rounded-full bg-surface-hover flex-shrink-0" />
+                        <div className="space-y-2 flex-1">
+                            <div className="h-5 w-40 rounded bg-surface-hover" />
+                            <div className="h-4 w-20 rounded bg-surface-hover" />
                         </div>
                     </div>
-                    <div className="pt-4 border-t border-gray-100 space-y-4">
-                        <div className="h-4 w-64 bg-gray-200 rounded animate-pulse"></div>
-                        <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
+                    {/* Details skeleton */}
+                    <div className="space-y-3">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#252842]">
+                                <div className="h-4 w-4 rounded bg-surface-hover" />
+                                <div className="h-4 w-24 rounded bg-surface-hover" />
+                                <div className="h-4 w-36 rounded bg-surface-hover ml-auto" />
+                            </div>
+                        ))}
                     </div>
                 </div>
             ) : isError ? (
-                <div className="rounded-md bg-red-50 p-4 border border-red-200">
-                    <div className="flex">
-                        <div className="flex-shrink-0">
-                            <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
-                        </div>
-                        <div className="ml-3 flex-1">
-                            <h3 className="text-sm font-medium text-red-800">Erro ao carregar usuário</h3>
-                            <div className="mt-2 text-sm text-red-700">
-                                <p>{error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.'}</p>
-                            </div>
-                            <div className="mt-4">
-                                <Button variant="ghost" className="text-red-800 hover:bg-red-100" onClick={onClose}>
-                                    Fechar
-                                </Button>
-                            </div>
-                        </div>
+                <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-danger/10 ring-4 ring-danger/5">
+                        <AlertCircle className="h-7 w-7 text-danger" />
                     </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-text-primary mb-1">Erro ao carregar usuário</h3>
+                        <p className="text-xs text-text-muted">
+                            {error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.'}
+                        </p>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={onClose}>
+                        Fechar
+                    </Button>
                 </div>
             ) : data ? (
-                <div className="space-y-6 py-2">
-                    <div className="flex items-center gap-4">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-                            <span className="text-2xl font-bold uppercase">{data.name.charAt(0)}</span>
+                <div className="space-y-5 py-2">
+                    {/* User profile header */}
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-[#252842] border border-border-subtle">
+                        <div className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${avatarColor} text-white font-bold text-xl shadow-sm flex-shrink-0`}>
+                            {getInitials(data.name)}
                         </div>
-                        <div>
-                            <h4 className="text-xl font-bold text-gray-900">{data.name}</h4>
-                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 mt-1">
+                        <div className="flex-1 min-w-0">
+                            <h4 className="text-lg font-bold text-text-primary truncate">{data.name}</h4>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success ring-1 ring-inset ring-success/20 mt-0.5">
+                                <CheckCircle2 className="h-3 w-3" />
                                 Ativo
                             </span>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden">
-                        <dl className="divide-y divide-gray-200">
-                            <div className="px-4 py-4 sm:flex sm:items-center sm:px-6">
-                                <dt className="text-sm font-medium text-gray-500 sm:w-1/3 flex items-center gap-2">
-                                    <Hash className="h-4 w-4 text-gray-400" />
-                                    ID do Usuário
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 font-mono">
-                                    {data.id}
-                                </dd>
-                            </div>
+                    {/* Details list */}
+                    <dl className="space-y-2">
+                        {/* ID */}
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                            <Hash className="h-4 w-4 text-primary-400 flex-shrink-0" />
+                            <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
+                                ID
+                            </dt>
+                            <dd className="text-sm text-text-primary font-mono ml-auto">
+                                #{data.id}
+                            </dd>
+                        </div>
 
-                            <div className="px-4 py-4 sm:flex sm:items-center sm:px-6">
-                                <dt className="text-sm font-medium text-gray-500 sm:w-1/3 flex items-center gap-2">
-                                    <UserIcon className="h-4 w-4 text-gray-400" />
-                                    Nome Completo
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                    {data.name}
-                                </dd>
-                            </div>
+                        {/* Name */}
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                            <UserIcon className="h-4 w-4 text-primary-400 flex-shrink-0" />
+                            <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
+                                Nome
+                            </dt>
+                            <dd className="text-sm text-text-primary ml-auto truncate">
+                                {data.name}
+                            </dd>
+                        </div>
 
-                            <div className="px-4 py-4 sm:flex sm:items-center sm:px-6">
-                                <dt className="text-sm font-medium text-gray-500 sm:w-1/3 flex items-center gap-2">
-                                    <Mail className="h-4 w-4 text-gray-400" />
-                                    Endereço de E-mail
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                    <a href={`mailto:${data.email}`} className="text-indigo-600 hover:text-indigo-500 hover:underline">
-                                        {data.email}
-                                    </a>
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
+                        {/* Email */}
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#252842] border border-border-subtle">
+                            <Mail className="h-4 w-4 text-primary-400 flex-shrink-0" />
+                            <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted w-24">
+                                E-mail
+                            </dt>
+                            <dd className="ml-auto">
+                                <a
+                                    href={`mailto:${data.email}`}
+                                    className="text-sm text-primary-400 hover:text-primary-300 hover:underline transition-colors truncate"
+                                >
+                                    {data.email}
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
 
-                    <div className="mt-6 flex justify-end">
-                        <Button onClick={onClose}>
+                    {/* Footer */}
+                    <div className="flex justify-end pt-1">
+                        <Button onClick={onClose} variant="ghost">
                             Fechar
                         </Button>
                     </div>
