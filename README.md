@@ -81,7 +81,10 @@ src/
 
 ## 📸 Screenshots
 
-> Adicionar screenshots aqui
+<img width="2552" height="1293" alt="image" src="https://github.com/user-attachments/assets/d5c3a606-bef5-4b15-91d8-6cafb0920e6c" />
+<img width="2555" height="1299" alt="image" src="https://github.com/user-attachments/assets/82150a34-bf9e-459c-838d-ede2f6be2d4f" />
+<img width="2550" height="1303" alt="image" src="https://github.com/user-attachments/assets/94f03eba-de9b-4fe4-87c6-35d4f9af0306" />
+
 
 ---
 
