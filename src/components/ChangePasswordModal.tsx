@@ -78,59 +78,68 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Alterar Senha">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="relative">
-                    <Input
-                        label="Senha Atual"
-                        type={showCurrentPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
-                        error={errors.currentPassword?.message}
-                        {...register('currentPassword')}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        tabIndex={-1}
-                    >
-                        {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                </div>
+                <Input
+                    label="Senha Atual"
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    error={errors.currentPassword?.message}
+                    suffix={
+                        <button
+                            type="button"
+                            className="text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                            tabIndex={-1}
+                        >
+                            {showCurrentPassword
+                                ? <EyeOff className="h-4 w-4 !text-[#818CF8]" />
+                                : <Eye className="h-4 w-4 !text-[#818CF8]" />
+                            }
+                        </button>
+                    }
+                    {...register('currentPassword')}
+                />
 
-                <div className="relative">
-                    <Input
-                        label="Nova Senha"
-                        type={showNewPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
-                        error={errors.newPassword?.message}
-                        {...register('newPassword')}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        tabIndex={-1}
-                    >
-                        {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                </div>
+                <Input
+                    label="Nova Senha"
+                    type={showNewPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    error={errors.newPassword?.message}
+                    suffix={
+                        <button
+                            type="button"
+                            className="text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            tabIndex={-1}
+                        >
+                            {showNewPassword
+                                ? <EyeOff className="h-4 w-4 !text-[#818CF8]" />
+                                : <Eye className="h-4 w-4 !text-[#818CF8]" />
+                            }
+                        </button>
+                    }
+                    {...register('newPassword')}
+                />
 
-                <div className="relative">
-                    <Input
-                        label="Confirmar Nova Senha"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
-                        error={errors.confirmNewPassword?.message}
-                        {...register('confirmNewPassword')}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        tabIndex={-1}
-                    >
-                        {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                </div>
+                <Input
+                    label="Confirmar Nova Senha"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    error={errors.confirmNewPassword?.message}
+                    suffix={
+                        <button
+                            type="button"
+                            className="text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            tabIndex={-1}
+                        >
+                            {showConfirmPassword
+                                ? <EyeOff className="h-4 w-4 !text-[#818CF8]" />
+                                : <Eye className="h-4 w-4 !text-[#818CF8]" />
+                            }
+                        </button>
+                    }
+                    {...register('confirmNewPassword')}
+                />
 
                 <ModalFooter
                     onClose={handleClose}

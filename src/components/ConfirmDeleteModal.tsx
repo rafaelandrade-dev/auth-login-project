@@ -19,11 +19,11 @@ export function ConfirmDeleteModal({
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Confirmar Exclusão">
             <div className="space-y-2">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-muted">
                     Tem certeza que deseja excluir o usuário{' '}
-                    <span className="font-semibold text-gray-900">{userName}</span>?
+                    <span className="font-semibold text-text-primary">{userName}</span>?
                 </p>
-                <p className="text-xs text-red-500 italic">Esta ação não pode ser desfeita.</p>
+                <p className="text-xs text-danger/80 italic">Esta ação não pode ser desfeita.</p>
             </div>
 
             <ModalFooter

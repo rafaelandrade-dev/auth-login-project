@@ -9,9 +9,26 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
+    input,
+    button,
+    textarea,
+    select {
+        font-family: inherit;
+    }
+
     body {
         background-color: #0F1117;
         color: #F1F2F6;
+    }
+
+    /* Override browser autofill yellow/blue background on dark inputs */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px #252842 inset !important;
+        -webkit-text-fill-color: #F1F2F6 !important;
+        caret-color: #F1F2F6;
+        transition: background-color 5000s ease-in-out 0s;
     }
 
     * {

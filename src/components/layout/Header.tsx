@@ -29,8 +29,8 @@ export function Header() {
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-600 to-violet-600 shadow-glow-sm">
                             <Shield className="h-4 w-4 text-white" />
                         </div>
-                        <span className="text-lg font-bold bg-gradient-to-r from-primary-400 to-violet-400 bg-clip-text text-transparent">
-                            AuthSystem
+                        <span className="text-xl font-bold bg-gradient-to-r from-white via-primary-200 to-violet-200 bg-clip-text text-transparent">
+                            UserHub
                         </span>
                     </div>
 
@@ -57,7 +57,7 @@ export function Header() {
 
                             {/* Dropdown */}
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface border border-border-subtle shadow-card overflow-hidden">
+                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#1A1D2E] border border-border-subtle shadow-card overflow-hidden z-50">
                                     {/* User info header */}
                                     <div className="px-4 py-3 border-b border-border-subtle">
                                         <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-0.5">Logado como</p>

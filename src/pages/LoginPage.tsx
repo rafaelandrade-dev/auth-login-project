@@ -46,39 +46,82 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-bg flex items-center justify-center px-4 py-12">
-            {/* Background glow */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl" />
-                <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
-            </div>
+        <div className="min-h-screen bg-bg grid md:grid-cols-2">
+            {/* Left Column: Decorative Panel */}
+            <div className="hidden md:flex relative overflow-hidden bg-gradient-to-br from-primary-800 via-primary-600 to-violet-800 p-12 flex-col justify-between">
+                {/* Decorative blobs */}
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-violet-400/10 rounded-full blur-3xl" />
+                <div className="absolute top-[30%] right-[10%] w-[15%] h-[15%] bg-primary-400/5 rounded-full blur-2xl" />
 
-            <div className="relative w-full max-w-md">
-                {/* Card */}
-                <div className="rounded-2xl bg-surface border border-border-subtle shadow-card p-8">
-                    {/* Logo */}
-                    <div className="flex flex-col items-center mb-8">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-violet-600 shadow-glow-sm mb-4">
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md shadow-glow-sm">
                             <Shield className="h-6 w-6 text-white" />
                         </div>
-                        <h1 className="text-2xl font-bold text-text-primary tracking-tight">Bem-vindo de volta</h1>
-                        <p className="text-sm text-text-muted mt-1">
-                            Entre na sua conta para continuar
-                        </p>
+                        <span className="text-2xl font-bold text-white tracking-tight">UserHub</span>
                     </div>
 
-                    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                        <Input
-                            label="E-mail"
-                            type="email"
-                            autoComplete="email"
-                            placeholder="seu@email.com"
-                            error={errors.email?.message}
-                            icon={<Mail className="h-4 w-4" />}
-                            {...register('email')}
-                        />
+                    <div className="max-w-md">
+                        <h2 className="text-5xl font-extrabold text-white leading-tight mb-6">
+                            Gerencie sua equipe com <span className="text-primary-200">eficiência</span>.
+                        </h2>
+                        <p className="text-lg text-primary-100/80 leading-relaxed">
+                            Uma plataforma moderna e escalável para controle de acesso, gestão de usuários e segurança de alto nível.
+                        </p>
+                    </div>
+                </div>
 
-                        <div className="relative">
+                <div className="relative z-10 mt-auto">
+                    <div className="flex items-center gap-4">
+                        <div className="flex -space-x-2">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="h-8 w-8 rounded-full border-2 border-primary-600 bg-primary-400 flex items-center justify-center text-[10px] text-white font-bold">
+                                    UI
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-sm text-primary-100/60 font-medium">
+                            Junte-se a 1 usuário que sou eu
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Column: Form Panel */}
+            <div className="flex items-center justify-center p-6 md:p-12 relative overflow-hidden">
+                {/* Mobile background glows */}
+                <div className="md:hidden fixed inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
+                </div>
+
+                <div className="w-full max-w-md animate-fade-in-up">
+                    <div className="rounded-2xl bg-surface border border-border-subtle shadow-card p-8 md:p-10">
+                        {/* Header */}
+                        <div className="flex flex-col items-center mb-10">
+                            <div className="md:hidden flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-violet-600 shadow-glow-sm mb-6">
+                                <Shield className="h-6 w-6 text-white" />
+                            </div>
+                            <h1 className="text-3xl font-bold text-text-primary tracking-tight text-center">
+                                Bem-vindo de volta
+                            </h1>
+                            <p className="text-sm text-text-muted mt-2 text-center">
+                                Entre na sua conta para continuar gerenciando sua equipe.
+                            </p>
+                        </div>
+
+                        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                            <Input
+                                label="E-mail"
+                                type="email"
+                                autoComplete="email"
+                                placeholder="seu@email.com"
+                                error={errors.email?.message}
+                                icon={<Mail className="h-4 w-4" />}
+                                {...register('email')}
+                            />
+
                             <Input
                                 label="Senha"
                                 type={showPassword ? 'text' : 'password'}
@@ -86,31 +129,49 @@ export default function LoginPage() {
                                 placeholder="••••••••"
                                 error={errors.password?.message}
                                 icon={<LockKeyhole className="h-4 w-4" />}
+                                suffix={
+                                    <button
+                                        type="button"
+                                        className="text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        tabIndex={-1}
+                                    >
+                                        {showPassword
+                                            ? <EyeOff className="h-4 w-4 !text-[#818CF8]" />
+                                            : <Eye className="h-4 w-4 !text-[#818CF8]" />
+                                        }
+                                    </button>
+                                }
                                 {...register('password')}
                             />
-                            <button
-                                type="button"
-                                className="absolute right-3 top-7 text-text-muted hover:text-text-primary transition-colors"
-                                onClick={() => setShowPassword(!showPassword)}
-                                tabIndex={-1}
+
+                            <Button
+                                type="submit"
+                                size="lg"
+                                className="w-full mt-2 hover-shimmer"
+                                loading={isSubmitting}
                             >
-                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
+                                Entrar no sistema
+                            </Button>
+                        </form>
+
+                        <div className="mt-8 pt-8 border-t border-border-subtle text-center">
+                            <p className="text-sm text-text-muted">
+                                Não tem uma conta?{' '}
+                                <Link
+                                    to="/cadastro"
+                                    className="font-semibold text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center gap-1"
+                                >
+                                    Criar conta agora
+                                    <span aria-hidden="true">&rarr;</span>
+                                </Link>
+                            </p>
                         </div>
+                    </div>
 
-                        <Button type="submit" size="lg" className="w-full mt-2" loading={isSubmitting}>
-                            Entrar
-                        </Button>
-                    </form>
-
-                    <p className="mt-6 text-center text-sm text-text-muted">
-                        Não tem uma conta?{' '}
-                        <Link
-                            to="/cadastro"
-                            className="font-medium text-primary-400 hover:text-primary-300 transition-colors"
-                        >
-                            Criar conta
-                        </Link>
+                    {/* Footer text */}
+                    <p className="mt-8 text-center text-xs text-text-muted/60">
+                        &copy; 2026 UserHub. Todos os direitos reservados.
                     </p>
                 </div>
             </div>
