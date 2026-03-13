@@ -83,6 +83,12 @@
       "email": "tester@example.com",
       "password": "password123",
       "id": 16
+    },
+    {
+      "name": "Teste final",
+      "email": "final@final.com",
+      "password": "final123",
+      "id": 17
     }
   ]
 }
