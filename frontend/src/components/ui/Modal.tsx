@@ -7,67 +7,71 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: ReactNode;
+    maxWidth?: 'sm' | 'md' | 'lg';
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, maxWidth = 'md' }: ModalProps) {
     const closeBtnRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            // Mover o foco para o botão de fechar ao abrir para acessibilidade
             closeBtnRef.current?.focus();
         } else {
             document.body.style.overflow = '';
         }
-
-        return () => {
-            document.body.style.overflow = '';
-        };
+        return () => { document.body.style.overflow = ''; };
     }, [isOpen]);
 
-    // Fechar ao pressionar a tecla ESC
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isOpen) {
-                onClose();
-            }
+            if (e.key === 'Escape' && isOpen) onClose();
         };
-
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
+    const maxWidthClass = {
+        sm: 'max-w-sm',
+        md: 'max-w-lg',
+        lg: 'max-w-2xl',
+    }[maxWidth];
+
     return createPortal(
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 transition-opacity"
+            className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-lg transform rounded-2xl bg-white p-6 shadow-xl transition-all"
+                className={`modal-panel relative w-full ${maxWidthClass} rounded-2xl bg-surface border border-border-subtle shadow-card overflow-hidden`}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex items-center justify-between mb-5 border-b border-gray-100 pb-4">
-                    <h3 id="modal-title" className="text-xl font-semibold leading-6 text-gray-900">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
+                    <h3
+                        id="modal-title"
+                        className="text-base font-semibold text-text-primary tracking-tight"
+                    >
                         {title}
                     </h3>
                     <button
                         ref={closeBtnRef}
                         type="button"
-                        className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="rounded-lg p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
                         onClick={onClose}
                         aria-label="Fechar"
                     >
-                        <X className="h-5 w-5" aria-hidden="true" />
+                        <X className="h-4 w-4" aria-hidden="true" />
                     </button>
                 </div>
 
-                <div className="mt-2">
+                {/* Body */}
+                <div className="px-6 py-5">
                     {children}
                 </div>
             </div>

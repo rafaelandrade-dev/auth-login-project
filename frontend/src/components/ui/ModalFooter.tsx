@@ -20,7 +20,7 @@ export function ModalFooter({
     onConfirm,
 }: ModalFooterProps) {
     return (
-        <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-border-subtle">
             <Button
                 type="button"
                 variant="ghost"

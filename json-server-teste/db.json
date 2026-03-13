@@ -1,0 +1,88 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "123456"
+    },
+    {
+      "name": "Rafael Andrade",
+      "email": "andraderafael037@gmail.com",
+      "password": "@scWFA7kcEBVaxt",
+      "id": 3
+    },
+    {
+      "name": "Teste Modal",
+      "email": "modal@teste.com",
+      "password": "modal@teste",
+      "id": 5
+    },
+    {
+      "name": "Test User Updated",
+      "email": "test@example.com",
+      "password": "password123",
+      "id": 6
+    },
+    {
+      "name": "User 7",
+      "email": "user7@test.com",
+      "password": "password123",
+      "id": 7
+    },
+    {
+      "name": "User 8",
+      "email": "user8@test.com",
+      "password": "password123",
+      "id": 8
+    },
+    {
+      "name": "User 9",
+      "email": "user9@test.com",
+      "password": "password123",
+      "id": 9
+    },
+    {
+      "name": "User 11",
+      "email": "user11@test.com",
+      "password": "123456",
+      "id": 10
+    },
+    {
+      "name": "Teste Senha",
+      "email": "senha@senha.com",
+      "password": "senhaa",
+      "id": 11
+    },
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123",
+      "id": 12
+    },
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123",
+      "id": 13
+    },
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "Password123!",
+      "id": 14
+    },
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123",
+      "id": 15
+    },
+    {
+      "name": "Tester",
+      "email": "tester@example.com",
+      "password": "password123",
+      "id": 16
+    }
+  ]
+}

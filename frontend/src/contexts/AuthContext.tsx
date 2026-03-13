@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { DecodedToken } from '../types/auth';
+import apiClient from '../api/client';
 
 interface AuthContextType {
     token: string | null;
@@ -39,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken && isTokenValid(storedToken)) {
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
             return storedToken;
         }
         localStorage.removeItem('token');
@@ -52,20 +54,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return null;
     });
 
-    const login = (newToken: string) => {
+    const login = useCallback((newToken: string) => {
         const decoded = decodeJWT(newToken);
         if (decoded) {
             localStorage.setItem('token', newToken);
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
             setToken(newToken);
             setUser(decoded);
         }
-    };
+    }, []);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         localStorage.removeItem('token');
+        delete apiClient.defaults.headers.common['Authorization'];
         setToken(null);
         setUser(null);
-    };
+    }, []);
 
     const isAuthenticated = token !== null && isTokenValid(token);
 

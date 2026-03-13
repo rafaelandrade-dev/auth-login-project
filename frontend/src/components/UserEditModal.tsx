@@ -55,7 +55,7 @@ export function UserEditModal({ user, isOpen, onClose, onSuccess }: UserEditModa
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Editar Usuário">
             <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
-                <UserFormFields register={register as never} errors={errors} />
+                <UserFormFields register={register as any} errors={errors} />
                 <ModalFooter
                     onClose={onClose}
                     isLoading={mutation.isPending}
