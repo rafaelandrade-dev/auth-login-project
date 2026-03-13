@@ -23,6 +23,7 @@ Uma plataforma moderna e elegante para gestão de usuários e controle de acesso
 
 3. **Instale as dependências:**
    ```bash
+   cd frontend
    npm install
    ```
 
