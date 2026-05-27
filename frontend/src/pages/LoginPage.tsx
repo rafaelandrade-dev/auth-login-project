@@ -100,8 +100,8 @@ export default function LoginPage() {
                 <div className="w-full max-w-md animate-fade-in-up">
                     {isDemoMode && (
                         <div className="mb-4 rounded-xl border border-primary-500/30 bg-primary-500/10 px-4 py-3 text-sm text-primary-300">
-                            <span className="font-semibold text-primary-200">Demo mode</span>
-                            {' '}— login with{' '}
+                            <span className="font-semibold text-primary-200">Modo demonstração</span>
+                            {' '}— entre com{' '}
                             <code className="font-mono text-primary-100">admin@example.com</code>
                             {' '}/ <code className="font-mono text-primary-100">123456</code>
                         </div>
