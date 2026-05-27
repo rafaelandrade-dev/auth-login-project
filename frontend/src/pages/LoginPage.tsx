@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { loginUser } from '../api/auth.service';
 import { getApiErrorMessage } from '../lib/utils';
+import { isDemoMode } from '../api/client';
 import type { LoginPayload } from '../types/auth';
 
 const loginSchema = z.object({
@@ -97,6 +98,15 @@ export default function LoginPage() {
                 </div>
 
                 <div className="w-full max-w-md animate-fade-in-up">
+                    {isDemoMode && (
+                        <div className="mb-4 rounded-xl border border-primary-500/30 bg-primary-500/10 px-4 py-3 text-sm text-primary-300">
+                            <span className="font-semibold text-primary-200">Demo mode</span>
+                            {' '}— login with{' '}
+                            <code className="font-mono text-primary-100">admin@example.com</code>
+                            {' '}/ <code className="font-mono text-primary-100">123456</code>
+                        </div>
+                    )}
+
                     <div className="rounded-2xl bg-surface border border-border-subtle shadow-card p-8 md:p-10">
                         {/* Header */}
                         <div className="flex flex-col items-center mb-10">
